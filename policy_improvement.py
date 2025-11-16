@@ -70,11 +70,14 @@ def policy_eval(policy, g) -> list[float] :
 # je calcule la nouvelle policy en prenant la meilleure value fonction en fonction de mon action
 def policy_improvement(value_function, last_policy, g):  
         stable = False
+        # je recupère une nouvelle policy prête à être modifiée
         new_policy = random_policy()
 
+        # je mets à jour la nouvelle policy
         for s in range(size*size)  :
              new_policy[s] = argmax([reward_function() + g * value_function[next_s(s,a)] for a in actions])
 
+        # je regarde si il y a convergence
         if last_policy == new_policy  : 
              stable = True
 
@@ -84,6 +87,8 @@ def policy_improvement(value_function, last_policy, g):
 def policy_iteration(g) : 
     policy = random_policy()
     
+
+    # tant qu'il n'y a pas convergence je continue a modifier ma policy
     while True : 
         value_function = policy_eval(policy, g)
         stable, policy = policy_improvement(value_function, policy, g)

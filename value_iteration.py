@@ -9,7 +9,7 @@ grid[0][0] = 1
 grid[3][3] = 1
 
 # mes actions posibles
-actions = [1,2,3,4]
+actions = [0,1,2,3]
 gama = [1,0.9, 0.8]
 epsilon = 0.0001
 # toujours -1 selon l'énoncé
@@ -57,11 +57,13 @@ def value_iteration(gama, epsilon, actions, next_s, reward_function) :
            stop_crit = max(stop_crit, abs(v_old - value_function[s]))
         if(stop_crit < epsilon) : break
 
-        # après covergence de la value_function je calcule la policy
+    # après covergence de la value_function je calcule la policy
     policy = [None for _ in range(size * size)]
     for s in range(size * size) :
     # états terminaux
-        if s == 0 or s== (size*size)-1 : policy[s] = None
+        if s == 0 or s== (size*size)-1 : 
+            policy[s] = None
+            continue
 
         current_best_action = None
         # je fixe cette valeur à la plus basse valeur dispo en python

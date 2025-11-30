@@ -10,10 +10,8 @@ def update_q_table(Q, s, a, r, sprime, alpha, gamma):
     the reward, the next state sprime, alpha the learning rate and gamma the discount factor.
     Return the same input Q but updated for the pair s and a.
     """
-    max_next= np.max(Q[sprime]) 
-    target= r + gamma * max_next 
-    td_error= target- Q[s,a]
-    Q[s,a]= Q[s,a] + alpha *td_error
+    max_next= np.max(Q[sprime, :])
+    Q[s,a]= Q[s,a] + alpha * (r + gamma + max_next - Q[s,a])
     return Q
 
 
@@ -26,9 +24,9 @@ def epsilon_greedy(Q, s, epsilone):
     # je défini aléatoirement ma prochaine action en fonction de epsilon
     action= None
     if(np.random.rand() < epsilone) : 
-       action = np.random.choice(env.action_space.n)
+       action = np.random.randint(Q.shape[1])
     else:
-       action= np.argmax(Q[s])
+       action= np.argmax(Q[s, :])
     return action
 
 
@@ -40,14 +38,14 @@ if __name__ == "__main__":
 
     Q = np.zeros([env.observation_space.n, env.action_space.n])
 
-    alpha = 0.01 # choose your own
+    alpha = 0.3 # choose your own
 
-    gamma = 0.8 # choose your own #0.80, 
+    gamma = 0.95 # choose your own #0.80, 
 
     epsilon = 0.3 # choose your own
 
-    n_epochs = 2000 # choose your own
-    max_itr_per_epoch = 100 # choose your own
+    n_epochs = 5000 # choose your own
+    max_itr_per_epoch = 200 # choose your own
     rewards = []
 
     for e in range(n_epochs):
@@ -69,7 +67,7 @@ if __name__ == "__main__":
             # Update state and put a stoping criteria
 
         print("episode #", e, " : r = ", r)
-        epsilon = epsilon*0.95 # tentative de baisser epsilone à chaque itération
+        # epsilon = epsilon*0.95 # tentative de baisser epsilone à chaque itération
 
         rewards.append(r)
 
@@ -99,3 +97,4 @@ if __name__ == "__main__":
 #10e essaie : alpha = 0.01 gama = 0.8 epsilon = 0.8 nb_epoch = 100 nb_episode = 1000 à chaque epsilone greddy je baisse epsilone de 5% Average reward =  -1270 récompense qui converge pour nb epoque et épidose
 #11e essaie : alpha = 0.02 gama = 0.99 epsilon = 0.8 nb_epoch = 100 max_iter = 100 à chaque epsilone greddy je baisse epsilone de 5% Average reward =  -137 récompense qui converge pour nb epoque et épidose
 #11e essaie : alpha = 0.01 gama = 0.99 epsilon = 0.8 nb_epoch = 100 max_iter = 100 à chaque epsilone greddy je baisse epsilone de 5% Average reward =  -137 récompense qui converge pour nb epoque et épidose
+# tentative parametre pauline : alpha = 0.3 gama = 0.95 epsilon = 0.8 nb_epoch = 5000 max_iter = 200 Average reward =  -137 
